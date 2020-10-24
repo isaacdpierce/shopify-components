@@ -1,0 +1,140 @@
+{% assign bg_color = section.settings.bg_color %}
+{% assign question_font_color = section.settings.question_font_color %}
+{% assign answer_font_color = section.settings.answer_font_color %}
+
+<section class="gdc-faq">
+  {% for block in section.blocks %}
+    <button class="accordion">{{ block.settings.question }}</button>
+    <div class="panel">
+      {{ block.settings.answer }}
+    </div>
+  {% endfor %}
+</section>
+
+{% style %}
+  .gdc-faq {
+    width: 70vw;
+    margin: 0 auto;
+  }
+
+  .accordion {
+    background-color: {{ bg_color }};
+    color: {{ question_font_color }};
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    margin-bottom: 2px;
+  }
+
+  .accordion p {
+    display: inline-block;
+    font-weight: bolder;
+    margin: 0;
+  }
+
+  .active, .accordion:hover {
+    filter: brightness(1.1);
+  }
+
+  .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    color: {{ answer_font_color }};
+  }
+
+  .active .panel {
+    max-height: 400px;
+  }
+
+  .accordion:after {
+    content: '\02795'; 
+    font-size: 13px;
+    color: {{ question_font_color }};
+    float: right;
+    margin-left: 5px;
+  }
+
+  .active:after {
+    content: "\2796"; 
+  }
+
+{% endstyle %}
+
+{% javascript %}
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+}
+{% endjavascript %}
+
+
+
+{% schema %}
+
+{
+  "name": "FAQ",
+  "class": "faq",
+  "settings": [
+    {
+      "id": "bg_color",
+      "type": "color",
+      "label": "FAQ Color",
+      "info": "The background color for your FAQ question." 
+    },
+    {
+      "id": "question_font_color",
+      "type": "color",
+      "label": "Question Font Color",
+      "info": "The color for the question font." 
+    },
+    {
+      "id": "answer_font_color",
+      "type": "color",
+      "label": "Answer Font Color",
+      "info": "The color for the answer font." 
+    }
+  ],
+  "blocks": [
+    {
+      "type": "FAQ_entry", 
+      "name": "FAQ Entry",
+      "settings": [
+      {
+        "type": "header",
+        "content": "FAQ entry"
+      },
+      {
+        "id": "question",
+        "type": "richtext",
+        "label": "Question",
+        "info": "The question for your FAQ entry."
+      },
+      {
+        "id": "answer",
+        "type": "richtext",
+        "label": "Answer",
+        "info": "The answer for your FAQ entry."
+      }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

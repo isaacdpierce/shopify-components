@@ -1,0 +1,200 @@
+{% assign timeline_color = section.settings.color %}
+
+<h2 class="timeline-title">{{ section.settings.header }}</h2>
+<section class="timeline">
+{%  for block in section.blocks %}
+    <div class="timeline-entry"> 
+
+      <div class="timeline-entry__year">
+        {{ block.settings.year }}
+      </div>
+
+      <div class="line">
+        <div class="dot"></div>
+      </div>
+
+      <div class="timeline-entry__content">
+        <div class="timeline-entry__text">
+          <h4>{{ block.settings.title }}</h4>
+          {{ block.settings.text }}
+        </div>   
+        {% if block.settings.image %}
+          <div class="timeline-entry__img">
+            <img src="{{ block.settings.image | img_url: '300x300' }}" />
+          </div>
+        {% endif %}
+      </div>
+
+    </section>
+  </div>
+{% endfor %}
+
+{% style %}
+  .line,
+  .line::after,
+  .line::before {
+    background-color: {{ timeline_color }};     
+  }
+
+  .timeline-entry__year,
+  .timeline-title {
+    color: {{ timeline_color }}; 
+  }
+
+  .timeline-title {
+    border-bottom: 3px solid {{ timeline_color }};              
+  }  
+
+  .timeline-title,
+  .timeline {
+    display: flex;  
+    flex-direction: column; 
+    width: 90vw;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  .timeline-title {
+    font-size: 24px;  
+    padding: 0 30px 10px; 
+    width: auto;
+    margin: 100px 0;                
+  }  
+
+  .timeline-entry {
+    width: 100%;
+    display: flex;
+    justify-content: center;          
+  }
+
+  .timeline-entry:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+
+  .line {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    min-height: 200px; 
+    width: 3vw;
+    position: relative;
+    margin: 0 10px;
+  }
+
+  .line::after {
+    content: '';
+    display: block;     
+    position: absolute;  
+    top: -1.1vw; 
+    height: 3vw;
+    width: 3vw;   
+    border-radius: 50%;         
+  }
+
+  .line::before {  
+    content: '';
+    display: block;  
+    position: absolute;
+    bottom: -1.1vw;   
+    height: 3vw;
+    width: 3vw; 
+    border-radius: 50%;           
+  }
+
+  .dot {
+    height: 2vw; 
+    width: 2vw;
+    background-color: white;  
+    border-radius: 50%;    
+  }  
+
+  .timeline-entry__year {
+    font-size: 200%;
+    font-weight: 700;     
+    justify-content: flex-end;  
+  }
+
+  .timeline-entry:nth-child(odd) > .timeline-entry__year {
+    justify-content: flex-start;  
+  }
+
+  .timeline-entry__content,
+  .timeline-entry__year {
+    display: flex;  
+    align-items: center;
+    width: 40vw;      
+    padding: 0 2vw;           
+  }
+
+  .timeline-entry__content {
+    text-align: center;
+    justify-content: center; 
+    flex-direction: column; 
+  }
+
+  .timeline-entry__text {
+    max-width: 400px;  
+  }
+
+  .timeline-entry__img img {
+    max-width: 40vw;
+    z-index: -1;    
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Timeline",
+  "class": "timeline",
+  "settings": [
+    {
+      "id": "header",
+      "type": "text",
+      "label": "Header",
+      "info": "The title for your timeline."
+    },
+    {
+      "id": "color",
+      "type": "color",
+      "label": "Timeline Color",
+      "info": "The color for your timeline." 
+    }
+  ],
+  "blocks": [
+    {
+      "type": "timeline_entry", 
+      "name": "Timeline Entry",
+      "settings": [
+      {
+        "type": "header",
+        "content": "Title for entry"
+      },
+      {
+        "id": "year",
+        "type": "text",
+        "label": "Year",
+        "info": "The year for your timeline entry."
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title",
+        "info": "The title for your timeline entry."
+      },
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Image (Optional)" 
+      },
+      {
+        "id": "text",
+        "type": "richtext",
+        "label": "Text"
+      }
+      ]
+    }
+  ]
+}
+
+{% endschema %}
