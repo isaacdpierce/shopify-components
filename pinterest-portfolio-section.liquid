@@ -1,0 +1,334 @@
+<!-- section/gdc-portfolio.liquid -->
+
+{% assign bg_color = section.settings.bg_color %}
+{% assign question_font_color = section.settings.header_font_color %}
+{% assign answer_font_color = section.settings.text_font_color %}
+
+{% style %}
+.portfolio-entry {
+  height: 90vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  background: {{ bg_color }};
+}
+
+.close {
+  background: none;
+  color: white;
+  border: 0;
+  font-size: 1.2em;  
+}
+
+.gallery {
+  display: grid;
+  grid-gap: 6px;
+  width: 100vw;
+  grid-template-columns: repeat(auto-fill, minmax(5%, 1fr));
+  grid-auto-rows: 100px;
+  grid-auto-flow: dense;
+  width: 100%;
+}
+
+.item,
+.item--small {
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 1;
+  overflow: hidden;
+}
+
+
+
+.item:nth-of-type(3n) {  
+  order: -6;
+}
+
+.item--small:nth-of-type(odd) {
+  order: -3;
+}
+
+
+.item__image {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item__overlay {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  background-color: #BED60132;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  transform: translateY(100%);
+  transition: 0.2s;
+}
+
+.item__button {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid white;
+  color: white;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+
+.item:hover .item__overlay {
+  transform: translateY(0);
+}
+
+.item--small:hover .item__overlay {
+  transform: translateY(0);
+}
+
+.item.v2 {
+  grid-row: span 2;
+}
+
+.item.v3 {
+  grid-row: span 3;
+}
+
+.item.v4 {
+  grid-row: span 4;
+}
+
+.item.h2 {
+  grid-column: span 2;
+}
+
+.item.h3 {
+  grid-column: span 3;
+}
+
+.item.h4 {
+  grid-column: span 4;
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  z-index: 2;
+}
+
+.overlay.open {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  overflow-y: scroll;
+  z-index: 1000;
+}
+
+.overlay .overlay-inner {
+  margin-top: 200px;
+  background:#333;
+  width: 700px;
+  padding: 20px;
+  object-fit: contain;
+}
+
+.overlay img {
+  width: 100%;
+}
+
+.noscroll {
+  overflow: hidden;
+}
+{% endstyle %}
+
+<div class="portfolio-entry">
+
+  <div class="overlay">
+    <div class="overlay-inner">
+      <button class="close">× Close</button> 
+      <img>
+    </div>
+  </div>
+
+
+  {% for block in section.blocks %}
+      <section class="gallery">
+
+      {% for i in (1..10) %}
+
+        {%- assign image_key = num | prepend: 'image_' -%}
+        {%- assign image = block.settings[image_key] -%}
+
+        {% if image %}
+          {% for num in (1..2) %}
+            <div class="item">
+              <img class="item__image" src="{{ image | img_url: '700x' }}" />
+              <div class="item__overlay"> 
+                <button class="item__button">View ➡</button>
+              </div>
+            </div>
+          {% endfor %}
+
+          {% for num in (1..2) %}
+            <div class="item--small">
+              <img class="item__image" src="{{ image | img_url: '700x' }}" />
+              <div class="item__overlay"> 
+                <button class="item__button">View ➡</button>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+    {% endfor %}
+    </section>
+  {% endfor %}
+</div>
+{% javascript %}
+
+const gallery = document.querySelector('.gallery');
+const overlay = document.querySelector('.overlay');
+const overlayImage = overlay.querySelector('img');
+const body = document.querySelector('body');
+const overlayClose = overlay.querySelector('.close');
+
+
+function randomNumber(limit) {
+  return Math.floor(Math.random() * limit) + 1;
+}
+
+function handleClick(e) {
+  const src = e.currentTarget.querySelector('img').src;
+  overlayImage.src = src;
+  open();
+  console.log(overlayImage, src);
+}
+
+function open() {
+  overlay.classList.add('open');    
+  body.classList.add('noscroll');
+}
+
+function close() { 
+  overlay.classList.remove('open');
+  body.classList.remove('noscroll');
+}
+
+const items = document.querySelectorAll('.item');
+const smallItems = document.querySelectorAll('.item--small');
+
+smallItems.forEach(item => {
+  item.addEventListener('click', handleClick);
+});
+
+items.forEach(item => {
+  item.addEventListener('click', handleClick);
+  item.classList.add(`h${randomNumber(4)}`, `v${randomNumber(4)}`);
+});
+
+overlayClose.addEventListener('click', close);
+
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Portfolio",
+  "class": "faq",
+  "settings": [
+    {
+      "id": "bg_color",
+      "type": "color",
+      "label": "Background Color",
+      "info": "The background color for your portfolio." 
+    },
+    {
+      "id": "header_font_color",
+      "type": "color",
+      "label": "Header Font Color"
+    },
+    {
+      "id": "text_font_color",
+      "type": "color",
+      "label": "Text Font Color"
+    }
+  ],
+  "blocks": [
+  {
+      "type": "portfolio_entry", 
+      "name": "Portfolio Entry",
+      "settings": [
+      {
+        "type": "header",
+        "content": "Portfolio entry"
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title",
+        "info": "The title for your Portfolio entry (Optional):"
+      },
+      {
+        "id": "text",
+        "type": "richtext",
+        "label": "Summary",
+        "info": "Tell your audience about the entry:"
+      },
+      {
+        "id": "image_1",
+        "type": "image_picker",
+        "label": "Image 1"
+      },
+      {
+        "id": "image_2",
+        "type": "image_picker",
+        "label": "Image 2"
+      },
+      {
+        "id": "image_3",
+        "type": "image_picker",
+        "label": "Image 3"
+      },
+      {
+        "id": "image_4",
+        "type": "image_picker",
+        "label": "Image 4"
+      },
+      {
+        "id": "image_5",
+        "type": "image_picker",
+        "label": "Image 5"
+      },
+      {
+        "id": "image_6",
+        "type": "image_picker",
+        "label": "Image 6"
+      },
+      {
+        "id": "image_7",
+        "type": "image_picker",
+        "label": "Image 7"
+      },
+      {
+        "id": "image_8",
+        "type": "image_picker",
+        "label": "Image 8"
+      },
+      {
+        "id": "image_9",
+        "type": "image_picker",
+        "label": "Image 9"
+      },
+      {
+        "id": "image_10",
+        "type": "image_picker",
+        "label": "Image 10"
+      }
+      ]
+    }
+  ]
+}
+
+{% endschema %}
