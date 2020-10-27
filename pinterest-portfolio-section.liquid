@@ -1,32 +1,40 @@
 <!-- section/gdc-portfolio.liquid -->
 
 {% assign bg_color = section.settings.bg_color %}
+{% assign class = section.settings.class %}
 {% assign header_font_color = section.settings.header_font_color %}
 {% assign header_bg_color = section.settings.header_bg_color %}
 
 {% style %}
 .portfolio__entry {
+  background: {{ bg_color }};
+}
+
+.portfolio__header {
+  color: {{ header_font_color }};
+  background-color: {{ header_bg_color }};
+}
+
+.portfolio-item__overlay {
+  background-color: {{ header_bg_color }}30;
+}
+
+/* ------- Move these styles to theme.scss.liquid ------------*/
+
+button:focus {outline:0;}
+
+.portfolio__entry {
   min-height: 90vh;
   margin-bottom: 40px;
-  background: {{ bg_color }};
 }
 
 .portfolio__header {
   text-align:center;
   padding: 20px 0;
-  color: {{ header_font_color }};
   margin-bottom: 6px;
-  background-color: {{ header_bg_color }};
 }
 
-.close {
-  background: none;
-  color: white;
-  border: 0;
-  font-size: 1.2em;  
-}
-
-.gallery {
+.portfolio__gallery {
   display: grid;
   overflow: hidden;
   grid-gap: 6px;
@@ -38,35 +46,57 @@
   width: 100%;
 }
 
-.item,
-.item--small {
+.portfolio-item,
+.portfolio-item--small {
   display: grid;
   grid-template-columns: 1;
   grid-template-rows: 1;
   overflow: hidden;
 }
 
-
-
-.item:nth-of-type(3n) {  
+.portfolio-item:nth-of-type(3n) {  
   order: -6;
 }
 
-.item:nth-of-type(even) {  
+.portfolio-item:nth-of-type(even) {  
   order: 2;
 }
 
-.item--small:nth-of-type(odd) {
+.portfolio-item--small:nth-of-type(odd) {
   order: -3;
 }
 
 
-.item--small:nth-of-type(even) {
+.portfolio-item--small:nth-of-type(even) {
   order: 3;
 }
 
+.portfolio-item.v2 {
+  grid-row: span 2;
+}
 
-.item__image {
+.portfolio-item.v3 {
+  grid-row: span 3;
+}
+
+.portfolio-item.v4 {
+  grid-row: span 5;
+}
+
+.portfolio-item.h2 {
+  grid-column: span 2;
+}
+
+.portfolio-item.h3 {
+  grid-column: span 3;
+}
+
+.portfolio-item.h4 {
+  grid-column: span 5;
+}
+
+
+.portfolio-item__image {
   grid-column: 1 / -1;
   grid-row: 1 / -1;
   width: 100%;
@@ -74,10 +104,9 @@
   object-fit: cover;
 }
 
-.item__overlay {
+.portfolio-item__overlay {
   grid-column: 1 / -1;
   grid-row: 1 / -1;
-  background-color: {{ header_bg_color }}30;
   position: relative;
   display: grid;
   justify-items: center;
@@ -86,7 +115,15 @@
   transition: 0.2s;
 }
 
-.item__button {
+.portfolio-item:hover .portfolio-item__overlay {
+  transform: translateY(0);
+}
+
+.portfolio-item--small:hover .portfolio-item__overlay {
+  transform: translateY(0);
+}
+
+.portfolio-item__button {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid white;
   color: white;
@@ -94,39 +131,7 @@
   padding: 5px 10px;
 }
 
-.item:hover .item__overlay {
-  transform: translateY(0);
-}
-
-.item--small:hover .item__overlay {
-  transform: translateY(0);
-}
-
-.item.v2 {
-  grid-row: span 2;
-}
-
-.item.v3 {
-  grid-row: span 3;
-}
-
-.item.v4 {
-  grid-row: span 5;
-}
-
-.item.h2 {
-  grid-column: span 2;
-}
-
-.item.h3 {
-  grid-column: span 3;
-}
-
-.item.h4 {
-  grid-column: span 5;
-}
-
-.overlay {
+.portfolio-overlay {
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
   top: 0;
@@ -134,10 +139,11 @@
   bottom: 0;
   left: 0;
   display: none;
+  padding-top: 150px;
   z-index: 2;
 }
 
-.overlay.open {
+.portfolio-overlay.open {
   display: grid;
   align-items: center;
   justify-items: center;
@@ -145,15 +151,28 @@
   z-index: 1000;
 }
 
-.overlay .overlay-inner {
+.portfolio-overlay .portfolio-overlay-inner {
   background:#333;
   width: 700px;
   padding: 20px;
   object-fit: contain;
 }
 
-.overlay img {
+.portfolio-overlay img {
   width: 100%;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+.portfolio-overlay__close {
+  background: none;
+  color: white;
+  border: 0;
+  font-size: 1.2em;
+  transform: translateY(-10px); 
 }
 
 .noscroll {
@@ -161,42 +180,42 @@
 }
 
 @media screen and (max-width: 950px) {
-  .gallery {
+  .portfolio__gallery {
     height: 150vw;
     grid-template-columns: repeat(auto-fill, minmax(10%, 1fr));
   }
-  .overlay .overlay-inner {
+  .portfolio-overlay .portfolio-overlay__inner {
     width: 70vw;
   }
 }
 
 @media screen and (max-width: 700px) {
-  .gallery {
+  .portfolio__gallery {
     height: 200vw;
     grid-template-columns: repeat(auto-fill, minmax(15%, 1fr));
   }
-  .overlay .overlay-inner {
+  .portfolio-overlay .portfolio-overlay__inner {
     width: 90vw;
   }
 }
 
+
 {% endstyle %}
 
-<div class="portfolio__entry">
-  <div class="overlay">
-    <div class="overlay-inner">
-      <button class="close">× Close</button> 
+<div class="{{ class }}">
+  <div class="portfolio-overlay">
+    <div class="portfolio-overlay__inner">
+      <button class="portfolio-overlay__close hidden">× Close</button> 
       <img>
     </div>
   </div>
-
 
   {% for block in section.blocks %}
     <div class="portfolio__header">
       <h3>{{block.settings.title}}</h3>
       <p>{{block.settings.text}}</p>
     </div>
-      <section class="gallery">
+      <section class="portfolio__gallery">
 
         {% for num in (1..10) %}
 
@@ -205,19 +224,19 @@
         
         {% if image %}
             {% for num in (1..2) %}
-              <div class="item">
-                <img class="item__image" src="{{ image | img_url: '700x' }}" />
-                <div class="item__overlay"> 
-                  <button class="item__button">View ➡</button>
+              <div class="portfolio-item">
+                <img class="portfolio-item__image" src="{{ image | img_url: '700x' }}" />
+                <div class="portfolio-item__overlay"> 
+                  <button class="portfolio-item__button">View ➡</button>
                 </div>
               </div>
             {% endfor %}
 
             {% for num in (1..2) %}
-              <div class="item--small">
-                <img class="item__image" src="{{ image | img_url: '700x' }}" />
-                <div class="item__overlay"> 
-                  <button class="item__button">View ➡</button>
+              <div class="portfolio-item--small">
+                <img class="portfolio-item__image" src="{{ image | img_url: '700x' }}" />
+                <div class="portfolio-item__overlay"> 
+                  <button class="portfolio-item__button">View ➡</button>
                 </div>
               </div>
             {% endfor %}
@@ -230,18 +249,17 @@
 
 {% javascript %}
 
-const gallery = document.querySelector('.gallery');
-const overlay = document.querySelector('.overlay');
+const overlay = document.querySelector('.portfolio-overlay');
 const overlayImage = overlay.querySelector('img');
 const body = document.querySelector('body');
-const overlayClose = overlay.querySelector('.close');
+const overlayClose = overlay.querySelector('.portfolio-overlay__close');
 
 
 function randomNumber(limit) {
   return Math.floor(Math.random() * limit) + 1;
 }
 
-function handleClick(e) {
+function handlePortfolioClick(e) {
   const src = e.currentTarget.querySelector('img').src;
   overlayImage.src = src;
   open();
@@ -250,22 +268,24 @@ function handleClick(e) {
 function open() {
   overlay.classList.add('open');    
   body.classList.add('noscroll');
+  overlayClose.classList.remove('hidden');
 }
 
 function close() { 
   overlay.classList.remove('open');
   body.classList.remove('noscroll');
+  overlayClose.classList.add('hidden');
 }
 
-const items = document.querySelectorAll('.item');
-const smallItems = document.querySelectorAll('.item--small');
+const items = document.querySelectorAll('.portfolio-item');
+const smallItems = document.querySelectorAll('.portfolio-item--small'); 
 
-smallItems.forEach(item => {
-  item.addEventListener('click', handleClick);
+smallItems.forEach(item => {    
+  item.addEventListener('click', handlePortfolioClick);
 });
 
 items.forEach(item => {
-  item.addEventListener('click', handleClick);
+  item.addEventListener('click', handlePortfolioClick);
   item.classList.add(`h${randomNumber(4)}`, `v${randomNumber(4)}`);
 });
 
@@ -276,7 +296,7 @@ overlayClose.addEventListener('click', close);
 {% schema %}
 {
   "name": "Portfolio",
-  "class": "faq",
+  "class": "portfolio__entry",
   "settings": [
     {
       "id": "bg_color",
