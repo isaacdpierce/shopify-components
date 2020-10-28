@@ -1,0 +1,413 @@
+<!-- section/gdc-card-grid.liquid -->
+
+{% assign bg_color = section.settings.bg_color %}
+{% assign class = section.settings.class %}
+{% assign header_font_color = section.settings.header_font_color %}
+{% assign header_bg_color = section.settings.header_bg_color %}
+{% assign section_title = section.settings.section_title %}
+{% assign overlay_text = section.settings.overlay_text %}
+{% assign button_text = section.settings.button_text %}
+{% assign grid_gap_width = section.settings.grid_gap_width %}
+{% assign image_width = section.settings.image_width %}
+{% assign vertical_size = section.settings.vertical_size %}
+{% assign card_overlay_text_color = section.settings.card_overlay_text_color %}
+{% assign card_overlay_color = section.settings.card_overlay_color %}
+{% assign grey_scale = section.settings.grey_scale %}
+{% assign transparency = section.settings.transparency %}
+
+{% style %}
+.card-grid__entry {
+  background: {{ bg_color }};
+}
+
+.card-grid__header {
+  margin-bottom: {{ grid_gap_width }}vw;
+  background-color: {{ header_bg_color }};
+  color: {{ header_font_color }};   
+}
+
+.card-grid__gallery {
+  grid-gap: {{ grid_gap_width }}vw;
+  max-width: 100vw;
+  grid-template-columns: repeat(auto-fit, minmax({{ image_width }}px, 1fr)); 
+}
+
+
+.card-item {  
+  grid-row: span {{ vertical_size }};   
+}
+
+.card-item__overlay {
+  background-color: {{ card_overlay_color }}{{ transparency }};  
+  color: {{ card_overlay_text_color }};
+}
+
+.card-item__button:hover {
+  color: {{ card_overlay_color }};
+  background-color: {{ card_overlay_text_color }}; 
+}
+
+.overlay-inner__text {
+  color: {{ card_overlay_text_color }}; 
+}  
+
+.card-item__image {
+  filter: grayscale({{ grey_scale }});
+}
+
+@media (max-width: 600px) { 
+  .card-grid__gallery {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  }
+}
+
+<!-- Move the following styles to theme.scss.liquid -->
+/* ---------------------- [GDC] Card Grid -------------------*/
+
+.card-grid__entry {
+  min-height: 90vh;
+  margin-bottom: 40px;
+}
+
+.card-grid__header {
+  text-align:center;
+  padding: 20px 0;
+}
+
+.card-grid__gallery {
+  display: grid;
+  width: 100vw;
+  grid-auto-rows: 150px;
+}
+
+.card-item {
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 1;
+  overflow: hidden;
+}
+
+.card-item__title { 
+  margin: 0 0 5px 0;    
+}
+
+.card-item__text { 
+  margin: 0 0 10px 0;  
+  font-size: .9em;   
+}
+
+.card-item__image {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.card-item__overlay {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  position: relative;  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;  
+  padding: 20px; 
+  height: 42%;  
+  transform: translateY(250%);
+  transition: 0.5s;
+}
+
+.card-item__button {
+  grid-column: 1 / -1;
+  background: rgba(0, 0, 0, 0.3); 
+  border: 1px solid white;
+  color: white;
+  font-size: .9em;  
+  text-transform: uppercase;
+  padding: 5px 7px;
+  transition: .3s;
+}
+
+.card-item__button:focus {
+  outline: 0;
+}
+
+
+.card-item:hover .card-item__overlay {
+  transform: translateY(138%);      
+}
+
+.card-grid__overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  z-index: 2;
+  padding: 15vh 0 4vh 0;
+}
+
+.card-grid__overlay.open {
+  display: flex;
+  justify-content: center; 
+  align-items: flex-end;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.card-grid__overlay .card-grid__overlay-inner {
+  background:#333;
+  width: 30%;
+  min-width: 350px;
+  height: 90%;
+  padding: 2vw 2vw 3vw 2vw;
+}
+
+.card-grid__overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.overlay-inner__text {
+  background:#333;
+  height: 90%;
+  width: 50%;  
+  padding: 2vw;
+  overflow: scroll;
+}  
+
+.card-overlay__close {
+  background: none;
+  color: white;
+  border: 0;
+  font-size: 1.2em;
+  transform: translateY(-10px); 
+}
+
+.close-hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+{% endstyle %}
+
+<div class="card-grid__entry">  
+{% for block in section.blocks %}
+  <div class="card-grid__overlay" data-overlay="{{ block.id }}">
+    <div class="card-grid__overlay-inner">
+      <button class="card-overlay__close close-hidden">× Close</button> 
+      <img>
+    </div>
+    {% if block.settings.show_text %} 
+      <div class="overlay-inner__text">
+          {{ block.settings.overlay_text }}
+      </div>
+    {% endif %}
+  </div>
+{% endfor %}
+
+<div class="card-grid__header">
+  <h3>{{ section_title }}</h3>
+</div> 
+
+<section class="card-grid__gallery">
+  {% for block in section.blocks %}
+        {%- assign image = block.settings.image -%}  
+        <div class="card-item"> 
+          <img class="card-item__image" src="{{ image | img_url: '700x' }}" /> 
+
+          <div class="card-item__overlay"> 
+            <h4 class="card-item__title">{{ block.settings.title }}</h4>
+            <p class="card-item__text">{{ block.settings.sub_header }}</p>
+            <button class="card-item__button" data-overlay-target="{{ block.id }}">{{ button_text }} ➡</button>  
+          </div>
+
+        </div>
+    {% endfor %}
+  </section>
+</div>
+
+{% javascript %}
+
+const body = document.querySelector('body');
+const overlayCloses = document.querySelectorAll('.card-overlay__close');
+
+function handleCardClick(e) {
+  const targetAttribute = e.target.getAttribute("data-overlay-target")
+  const targetOverlay = document.querySelector(`[data-overlay="${CSS.escape(targetAttribute)}"]`);
+  const overlayImage = targetOverlay.querySelector('img');
+  const src = e.currentTarget.querySelector('img').src;
+  overlayImage.src = src;
+  open(targetOverlay);
+}
+
+function open(targetOverlay) {
+  const overlayClose = targetOverlay.querySelector('.card-overlay__close');
+  targetOverlay.classList.add('open');    
+  body.classList.add('noscroll'); 
+  overlayClose.classList.remove('close-hidden');
+}
+
+function close(e) { 
+  e.target.classList.add('close-hidden');   
+  e.target.closest(".card-grid__overlay").classList.remove('open'); 
+  body.classList.remove('noscroll');
+}
+
+const items = document.querySelectorAll('.card-item');
+
+items.forEach(item => {
+  item.addEventListener('click', handleCardClick);
+});
+
+overlayCloses.forEach(overlayClose => { 
+  overlayClose.addEventListener('click', close); 
+});
+
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Structured Image Grid ",
+  "class": "img-overlay__grid",
+  "settings": [
+    {
+      "id": "section_title",
+      "type": "text",
+      "label": "Section Title",
+      "info": "The title for this Card Grid Section."
+    },
+    {
+      "id": "button_text",
+      "type": "text",
+      "label": "Overlay Button Text"  
+    },
+    {
+      "id": "bg_color",
+      "type": "color",
+      "label": "Background Color",
+      "info": "The background color for your card-grid." 
+    },
+    {
+      "id": "header_font_color",
+      "type": "color",
+      "label": "Header Font Color"
+    },
+    {
+      "id": "header_bg_color",
+      "type": "color",
+      "label": "Header Background Color"
+    },
+    {
+      "id": "card_overlay_color",
+      "type": "color",
+      "label": "Card Overlay Color"
+    },
+    {
+      "id": "card_overlay_text_color",
+      "type": "color",
+      "label": "Card Overlay Text Color"
+    },
+    {
+      "type":      "range",
+      "id":        "transparency",
+      "min":       0,
+      "max":        99,
+      "step":       1,
+      "unit":       "%",
+      "label":     "Card Overlay Transparency", 
+      "info":     "For image hover overlay",
+      "default":   30
+    },
+    {
+      "type":      "range",
+      "id":        "grey_scale",
+      "min":       0,
+      "max":        100,
+      "step":       10,
+      "label":     "Grey Scale for Images",
+      "default":   0
+    },
+    {
+      "type":      "range",
+      "id":        "grid_gap_width",
+      "min":       0,
+      "max":        6,
+      "step":       0.5,
+      "unit":       "vw",
+      "label":     "Grid Gap",
+      "info":     "based on viewport width",
+      "default":   6
+    },
+    {
+      "type":      "range",
+      "id":        "vertical_size",
+      "min":       1,
+      "max":        6,
+      "step":       1,
+      "label":     "Height of Card",
+      "default":   4
+    },
+    {
+      "type":      "range",
+      "id":        "image_width",
+      "min":       100,
+      "max":        600,
+      "step":       10,
+      "unit":       "px",
+      "label":     "Minimum Image Width", 
+      "info":       "Images will space evenly across the page but never get smaller than this number.",
+      "default":   300
+    }
+  ],
+  "blocks": [
+  {
+      "type": "card-grid_entry", 
+      "name": "Card Grid Entry",
+      "settings": [
+      {
+        "type": "header",  
+        "content": "Card Grid Entry"
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title",
+        "info": "The title for your card grid entry."
+      },
+      {
+        "id": "sub_header",
+        "type": "text",  
+        "label": "Subheader",
+        "info": "Say something about the entry"
+      },
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Image"
+      },
+      {
+        "type":      "checkbox",
+        "id":        "show_text",
+        "label":     "Show Text Box",
+        "default":   true,
+        "info":      "Do you want to show a text box beside the card popup?"
+      },
+      {
+        "id": "overlay_text",
+        "type": "text",
+        "label": "Overlay Text",
+        "info": "Add more details for card popup"
+      }
+      ]
+    }
+  ]
+}
+
+{% endschema %}
