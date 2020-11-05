@@ -1,8 +1,12 @@
+<!-- section/gdc-portfolio.liquid -->
+
 {% assign bg_color = section.settings.bg_color %}
 {% assign class = section.settings.class %}
 {% assign header_font_color = section.settings.header_font_color %}
 {% assign header_bg_color = section.settings.header_bg_color %}
+{% assign grey_scale = section.settings.grey_scale %}
 
+{% if section.settings.show_portfolio %} 
 {% style %}
 .portfolio__entry {
   background: {{ bg_color }};
@@ -18,12 +22,14 @@
 }
 
 /* ------- Move these styles to theme.scss.liquid ------------*/
+/* ---------------------- [GDC] Portfolio -------------------*/
 
 button:focus {outline:0;}
 
 .portfolio__entry {
-  min-height: 90vh;
+  height: 90vh;
   margin-bottom: 40px;
+  overflow: hidden;
 }
 
 .portfolio__header {
@@ -38,8 +44,8 @@ button:focus {outline:0;}
   grid-gap: 6px;
   width: 100vw;
   height: 90vh;
-  grid-template-columns: repeat(auto-fill, minmax(5%, 1fr));
-  grid-auto-rows: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
+  grid-auto-rows: 10vw;
   grid-auto-flow: dense;
   width: 100%;
 }
@@ -100,6 +106,7 @@ button:focus {outline:0;}
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: grayscale({{ grey_scale }});
 }
 
 .portfolio-item__overlay {
@@ -200,6 +207,7 @@ button:focus {outline:0;}
 
 {% endstyle %}
 
+
 <div class="{{ class }}">
   <div class="portfolio-overlay">
     <div class="portfolio-overlay__inner">
@@ -221,29 +229,30 @@ button:focus {outline:0;}
         {%- assign image = block.settings[image_key] -%}
         
         {% if image %}
-            {% for num in (1..2) %}
+
               <div class="portfolio-item">
                 <img class="portfolio-item__image" src="{{ image | img_url: '700x' }}" />
                 <div class="portfolio-item__overlay"> 
                   <button class="portfolio-item__button">View ➡</button>
                 </div>
               </div>
-            {% endfor %}
 
-            {% for num in (1..2) %}
+
+
               <div class="portfolio-item--small">
                 <img class="portfolio-item__image" src="{{ image | img_url: '700x' }}" />
                 <div class="portfolio-item__overlay"> 
                   <button class="portfolio-item__button">View ➡</button>
                 </div>
               </div>
-            {% endfor %}
+
         {% endif %}
 
        {% endfor %}
     </section>
   {% endfor %}
 </div>
+{% endif %}  
 
 {% javascript %}
 
@@ -293,14 +302,22 @@ overlayClose.addEventListener('click', close);
 
 {% schema %}
 {
-  "name": "Portfolio",
-  "class": "portfolio__entry",
+  "name": "Random Grid Portfolio",
+  "class": "portfolio__entry", 
   "settings": [
+    {
+      "id": "show_portfolio",
+      "type": "checkbox",
+      "label": "Show Portfolio Section",
+      "info": "Check to place on portfolio section site.",
+	  "default": false
+    },
     {
       "id": "bg_color",
       "type": "color",
       "label": "Background Color",
-      "info": "The background color for your portfolio." 
+      "info": "The background color for your portfolio.",
+	  "default": "#333333"
     },
     {
       "id": "header_font_color",
@@ -309,8 +326,17 @@ overlayClose.addEventListener('click', close);
     },
     {
       "id": "header_bg_color",
-      "type": "color",
+      "type": "color",    
       "label": "Header Background Color"
+    },
+    {
+      "type":      "range",
+      "id":        "grey_scale",
+      "min":       0,
+      "max":        100,
+      "step":       10,
+      "label":     "Grey Scale for Images",
+      "default":   0
     }
   ],
   "blocks": [

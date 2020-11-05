@@ -13,7 +13,7 @@
 
 {% style %}
   .gdc-faq {
-    width: 70vw;
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -28,6 +28,7 @@
     outline: none;
     transition: 0.4s;
     margin-bottom: 2px;
+    position: relative;
   }
 
   .accordion p {
@@ -54,15 +55,19 @@
   }
 
   .accordion:after {
-    content: '\02795'; 
-    font-size: 13px;
+    content: '+'; 
+    font-size: 38px;
     color: {{ question_font_color }};
-    float: right;
     margin-left: 5px;
+    position: absolute;
+    right: 20px;
+    top: 40%;
   }
 
   .active:after {
-    content: "\2796"; 
+    content: "-";
+    font-size: 40px;
+    top: 35%;
   }
 
 {% endstyle %}

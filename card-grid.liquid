@@ -21,17 +21,16 @@
 }
 
 .card-grid__header {
-  margin-bottom: {{ grid_gap_width }}vw;
   background-color: {{ header_bg_color }};
   color: {{ header_font_color }};   
 }
 
 .card-grid__gallery {
   grid-gap: {{ grid_gap_width }}vw;
+  padding: {{ grid_gap_width }}vw 0;
   max-width: 100vw;
   grid-template-columns: repeat(auto-fit, minmax({{ image_width }}px, 1fr)); 
 }
-
 
 .card-item {  
   grid-row: span {{ vertical_size }};   
@@ -197,6 +196,7 @@
 
 {% endstyle %}
 
+<!-- Move HTML to snippet -->
 <div class="card-grid__entry">  
 {% for block in section.blocks %}
   <div class="card-grid__overlay" data-overlay="{{ block.id }}">
@@ -212,13 +212,16 @@
   </div>
 {% endfor %}
 
-<div class="card-grid__header">
-  <h3>{{ section_title }}</h3>
-</div> 
+{% if  section.settings.section_title != blank %}
+  <div class="card-grid__header">
+    <h3>{{ section_title }}</h3>
+  </div> 
+{% endif %}
 
 <section class="card-grid__gallery">
   {% for block in section.blocks %}
         {%- assign image = block.settings.image -%}  
+
         <div class="card-item"> 
           <img class="card-item__image" src="{{ image | img_url: '700x' }}" /> 
 
@@ -227,7 +230,6 @@
             <p class="card-item__text">{{ block.settings.sub_header }}</p>
             <button class="card-item__button" data-overlay-target="{{ block.id }}">{{ button_text }} ➡</button>  
           </div>
-
         </div>
     {% endfor %}
   </section>
