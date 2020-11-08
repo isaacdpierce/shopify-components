@@ -1,0 +1,139 @@
+<!-- sections/gdc-mission.liquid -->
+
+<section class="gdc-text">
+  <div class="gdc-text__header">
+    {{ section.settings.header }}
+  </div>
+  <div class="gdc-text__body">
+    {{ section.settings.body }}
+  </div>
+  {% if section.settings.image != blank %}
+    <div class="gdc-text__image">
+      <img src="{{ section.settings.image | img_url: "medium" }}">
+    </div>
+  {% endif %}
+</section>
+
+{% style %}
+  .gdc-text {
+    background: {{ section.settings.bg_color }};
+  }
+
+  .gdc-text__header p {   
+    font-size: {{ section.settings.header_font }}px;
+  }
+
+  .gdc-text__image {
+    min-width: {{ section.settings.image_width }}px;  
+  }
+
+  /* ================= [GDC] Vertical Header with Text and Image ========================= */
+
+.gdc-text {
+  display: flex;
+  justify-content: space-between;   
+  align-items: center;
+  padding: 0 5vw;  
+  width: 100%;
+  min-height: 50vh;   
+}
+
+.gdc-text__header {
+  transform: rotate(-90deg);
+  max-width: 200px;
+  text-align: right;
+  letter-spacing: 9px;
+  text-transform: uppercase;
+}
+
+.gdc-text__header p {   
+  margin: 0;
+  line-height: 30px;
+}
+
+.gdc-text__body {
+  max-width: 800px;
+  min-width: 300px;
+  margin: 20px 10px;
+}
+
+@media (max-width: 895px) {      
+  .gdc-text {
+    flex-direction: column;    
+  }
+
+  .gdc-text__header {
+    transform: rotate(0deg);  
+    align-self: flex-end;
+  }
+
+  .gdc-text__body {   
+    text-align: right;
+  }
+}
+
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Mission Statement",
+  "class": "gdc-text",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font Color",      
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "header_font",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Header Font Size",       
+      "default": 48
+    },
+    {
+      "type": "richtext",
+      "id": "header",
+      "label": "Section Header"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Section Body Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 100,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Image width",
+      "default": 200
+    }
+  ],
+  "presets": [
+  {
+    "name": "Custom Text and Image",
+    "category": "Text",
+    "settings": {
+    }
+  }
+]
+}
+{% endschema %}
