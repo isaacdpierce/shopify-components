@@ -1,0 +1,222 @@
+{% if section.settings.enable_section %}
+<section>
+
+<div class="ip-slider__title">
+  <h3>{{ section.settings.title }}</h3>
+</div>
+  <div class="ip-slider__wrapper">
+    <div class="ip-slider-button--back hidden">
+      <
+    </div>
+    <div class="ip-slider">
+      {% for block in section.blocks %}
+      {% if block.type == "slide" %}
+        <div class="ip-slide">
+          <div class="ip-slide__img">
+            <img src="{{ block.settings.image | img_url: '600x' }}" alt="{{ block.settings.image.alt }}">
+          </div>
+          {% if block.settings.text %}
+          <div class="ip-slide__text">
+            <p>{{ block.settings.text }}</p>
+          </div>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% endfor %}     
+    </div> 
+    <div class="ip-slider-button--forward">
+      >
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<style>
+  .ip-slider__title {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+
+  .ip-slider__wrapper,
+  .ip-slider,
+  .ip-slide,
+  .ip-slide__img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  
+  .ip-slider__wrapper {
+    width: 80vw;
+    position: relative;
+  }
+
+  .ip-slider {
+    height: 450px;
+    justify-content: start;
+    align-items: flex-start;
+    max-width:  100%;
+    overflow-y: scroll;
+  }
+
+  .ip-slide {
+    position: relative;
+    flex-direction: column;
+    height: 450px;
+    width: 80vw;
+  }
+
+  .ip-slide__img {
+    margin-bottom: 40px;
+    height: 450px;
+    width: 80vw;
+    overflow: hidden;
+  }
+
+  .ip-slide__img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .ip-slide__text {
+    max-width: 500px;
+    background-color: rgba(255, 255, 255, 0.627);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+  }
+
+  .ip-slide__text p {
+    margin-bottom: 20px;
+  }
+
+  .ip-slide__text a {
+    font-size: 14px;
+    font-weight: bolder;
+    color: #fff;
+    padding: 10px 20px;
+    background-color: #1D4BA9;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 3px;
+  }
+
+  .ip-slider-button--back,
+  .ip-slider-button--forward {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    padding: 0 10px 50px 10px;
+    background-color: rgba(255, 255, 255, 0.552);
+    color: #555;
+    font-size: 64px !important;
+    z-index: 10;
+    cursor: pointer;
+  }
+
+
+  .ip-slider-button--back {
+    left: 0;
+  }
+
+  .ip-slider-button--forward {
+    right: 0;
+  }
+
+  .hidden {
+    display: none;
+    opacity: 0;
+  }
+
+</style>
+
+{% schema %}
+  {
+    "name": "Ingredients Slider",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_section",
+        "label": "Show Ingredients Slider Section",
+        "default": true
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Text",  
+        "default": "Title" 
+      }
+    ],
+    "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",   
+      "settings": [
+        {
+          "type": "image_picker",     
+          "id": "image",
+          "label": "Main Image"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ]
+  }
+{% endschema %}
+
+{% javascript %}
+const slider = document.querySelector(".ip-slider");
+const slide = document.querySelector(".ip-slide");
+const slideWidth = slide.offsetWidth;
+const sliderBackButton = document.querySelector(".ip-slider-button--back");
+const sliderForwardButton = document.querySelector(".ip-slider-button--forward");
+
+sliderForwardButton.onclick = function () {
+  let scrollAmount = 0;
+
+  const slideTimer = setInterval(function(){
+      slider.scrollLeft += 10;
+      scrollAmount += 10;
+      if(scrollAmount >= slideWidth){
+          window.clearInterval(slideTimer);
+      }
+  }, 10);
+};
+
+sliderBackButton.onclick = function () {
+  let scrollAmount = 0;
+
+  const slideTimer = setInterval(function(){
+      slider.scrollLeft -= 10;
+      scrollAmount += 10;
+      if(scrollAmount >= slideWidth){
+          window.clearInterval(slideTimer);
+      }
+  }, 10);
+};
+
+
+slider.addEventListener('scroll', () => {
+  if (slider.scrollLeft > 0 ) {
+
+    sliderBackButton.classList.remove('hidden'); 
+  } 
+
+  if (slider.scrollLeft == 0 ) {
+    sliderBackButton.classList.add('hidden');
+  } 
+})
+
+
+{% endjavascript %}

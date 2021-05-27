@@ -1,0 +1,284 @@
+<!-- Original in GDC CMS collections pages -->
+
+{% assign header_color = section.settings.header_color %}
+{% assign header_height = section.settings.header_height %}
+{% assign header_image = section.settings.header_image %}
+{% assign header_image_v_position = section.settings.header_image_v_position %}
+{% assign header_text = section.settings.header_text %}
+{% assign header_text_h_position = section.settings.header_text_h_position %}
+{% assign header_text_size = section.settings.header_text_size %}
+{% assign header_text_v_position = section.settings.header_text_v_position %}
+
+{% assign mobile_header_color = section.settings.mobile_header_color %}
+{% assign mobile_header_height = section.settings.mobile_header_height %}
+{% assign mobile_header_image = section.settings.mobile_header_image %}
+{% assign mobile_header_image_v_position = section.settings.mobile_header_image_v_position %}
+{% assign mobile_header_text = section.settings.mobile_header_text %}
+{% assign mobile_header_text_h_position = section.settings.mobile_header_text_h_position %}
+{% assign mobile_header_text_size = section.settings.mobile_header_text_size %}
+{% assign mobile_header_text_v_position = section.settings.mobile_header_text_v_position %}
+
+{% if section.settings.mobile_header_color == blank %}
+  {% assign mobile_header_color = section.settings.header_color %}
+{% endif %}
+{% if section.settings.mobile_header_image == blank %}
+  {% assign mobile_header_image = section.settings.header_image %}
+{% endif %}
+{% if section.settings.mobile_header_text == blank %}
+  {% assign mobile_header_text = section.settings.header_text %}
+{% endif %}
+
+<div class="gdc-collections__header desktop-only"> 
+  <img class="gdc-header__image" src="{{ header_image | img_url: '1200x' }}" /> 
+
+  {% if header_text != blank %}
+    <div class="gdc-header__text">
+      {{ header_text }}
+    </div>
+  {% endif %}
+</div>
+ 
+<div class="gdc-collections__mobile-header mobile-only"> 
+  <img class="gdc-mobile-header__image" src="{{ mobile_header_image | img_url: '600x' }}" /> 
+
+  {% if mobile_header_text != blank %}
+  <div class="gdc-mobile-header__text">
+    {{ mobile_header_text }}
+  </div>
+  {% endif %}
+</div>
+
+{% style %}
+
+.gdc-collections__header {
+  height: {{ section.settings.header_height}}px;  
+}
+
+.gdc-header__image {
+  object-position: 50% {{ section.settings.header_image_v_position }}%; 
+}
+
+.gdc-header__text {
+  position: absolute;
+  top: {{ section.settings.header_text_v_position}}%; 
+  left: {{ section.settings.header_text_h_position }}%;
+  color: {{ section.settings.header_color }};
+  font-size: {{ section.settings.header_text_size}}px;
+}
+
+@media (max-width: 599px) {
+  .gdc-collections__mobile-header {
+    height: {{ section.settings.mobile_header_height}}px;  
+  }
+  .gdc-collections__header {
+    height: {{ section.settings.header_height}}px;  
+  }
+  .gdc-mobile-header__image {
+    object-position: 50% {{ section.settings.mobile_header_image_v_position }}%;
+  }
+  .gdc-mobile-header__text {
+    position: absolute;
+    top: {{ section.settings.mobile_header_text_v_position}}%; 
+    left: {{ section.settings.mobile_header_text_h_position }}%;
+    color: {{ section.settings.mobile_header_color }};
+    font-size: {{ section.settings.mobile_header_text_size}}px;
+  }
+}
+
+/* ------------------- Custom Header ---------- */
+
+
+.gdc-collections__header,
+.gdc-collections__mobile-header {
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.gdc-header__image,
+.gdc-mobile-header__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}   
+
+.gdc-header__text,
+.gdc-mobile-header__text {
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+
+
+@media (min-width: 600px) {
+  .desktop-only {
+    display: inline-block;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: inline-block;
+  }
+}
+
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "Collection pages",
+    "settings": [
+      {
+        "type":      "header",
+        "content":   "Desktop Header Settings",
+        "info":      "Style the page header for desktop."
+      },
+      {
+        "type": "image_picker",
+        "id": "header_image",
+        "label": "Header Image"
+      },
+      {
+        "type": "range",
+        "id": "header_height",
+        "label": "Header Height",
+        "min": 100,
+        "max": 500,
+        "step": 5,
+		    "unit": "px",
+        "default": 200
+      },
+      {
+        "type":      "range",
+        "id":        "header_image_v_position",
+        "label":     "Header Image Vertical Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+		    "unit": "%",
+        "default": 50
+      },
+      {
+        "type": "text",
+        "id": "header_text",
+        "label": "Header Text"
+      },
+      {
+        "type":      "color",
+        "id":        "header_color",
+        "label":     "Header Font Color",
+        "default":   "#fff"
+      },
+      {
+        "type":      "range",
+        "id":        "header_text_size",
+        "label":     "Header Text Size", 
+        "min": 10,
+        "max": 90,
+        "step": 1,
+		    "unit": "px",
+        "default": 24
+      },
+      {
+        "type":      "range",
+        "id":        "header_text_v_position",
+        "label":     "Header Text Vertical Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+		    "unit": "%",
+        "default": 50
+      },
+      {
+        "type":      "range",
+        "id":        "header_text_h_position",
+        "label":     "Header Text Horizontal Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+		    "unit": "%",
+        "default": 50
+      }, 
+      {
+        "type":      "header",
+        "content":   "Mobile Header Settings",
+        "info":      "Style the page header for mobile screens less than 600 pixels wide. "
+      },
+      {
+        "type": "image_picker",
+        "id": "mobile_header_image",
+        "label": "Mobile Header Image"
+      },
+      {
+        "type": "range",
+        "id": "mobile_header_height", 
+        "label": "Mobile Header Height",
+        "min": 100,
+        "max": 500,
+        "step": 5,
+        "unit": "px",
+        "default": 200
+      },
+      {
+        "type":      "range",
+        "id":        "mobile_header_image_v_position",
+        "label":     "Mobile Header Image Vertical Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 50
+      },
+      {
+        "type": "text",
+        "id": "mobile_header_text",
+        "label": "Mobile Header Text"
+      },
+      {
+        "type":      "color",
+        "id":        "mobile_header_color",
+        "label":     "Mobile Header Font Color",
+        "default":   "#fff"
+      },
+      {
+        "type":      "range",
+        "id":        "mobile_header_text_size",
+        "label":     "Mobile Header Text Size", 
+        "min": 10,
+        "max": 90,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type":      "range",
+        "id":        "mobile_header_text_v_position",
+        "label":     "Mobile Header Text Vertical Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 50
+      },
+      {
+        "type":      "range",
+        "id":        "mobile_header_text_h_position",
+        "label":     "Mobile Header Text Horizontal Position",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 50
+      }
+    ]
+  }
+{% endschema %}
+

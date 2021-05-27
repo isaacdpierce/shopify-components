@@ -1,13 +1,12 @@
 {% assign bg_color = section.settings.bg_color %}
-{% assign question_font_color = section.settings.question_font_color %}
-{% assign answer_font_color = section.settings.answer_font_color %}
-{% assign form_header = section.settings.form_header %}
+{% assign title_font_color = section.settings.title_font_color %}
+{% assign text_font_color = section.settings.text_font_color %}
 
 {% for block in section.blocks %}
 
 {% endfor %}
 
-<section class="gdc-faq">
+<section class="gdc-info-accordian">
   {% for block in section.blocks %}
     {% if  block.settings.section_title %}
       <h4>{{ block.settings.section_title }}</h4>
@@ -25,21 +24,21 @@
 {% style %}
   .gdc-accordion {
     background-color: {{ bg_color }}; 
-    color: {{ question_font_color }};
+    color: {{ title_font_color }};
   }
 
   .gdc-panel {
-    color: {{ answer_font_color }};
+    color: {{ text_font_color }};
   }
 
   .gdc-accordion:after {
-    color: {{ question_font_color }};
+    color: {{ title_font_color }};
   }
 
   /* ---------------- [GDC] FAQ Section -------------------- */
   /* ---------------- Move to theme.scss -------------------- */
 
-.gdc-faq {
+.gdc-info-accordian {
   width: 100%;
   margin: 0 auto;
 }
@@ -107,21 +106,16 @@
       "info": "The background color for your FAQ question." 
     },
     {
-      "id": "question_font_color",
+      "id": "title_font_color",
       "type": "color",
       "label": "Question Font Color",
       "info": "The color for the question font." 
     },
     {
-      "id": "answer_font_color",
+      "id": "text_font_color",
       "type": "color",
       "label": "Answer Font Color",
       "info": "The color for the answer font." 
-    },
-    {
-      "id": "form_header",
-      "type": "text",
-      "label": "Contact Form Header"
     }
   ],
   "blocks": [
